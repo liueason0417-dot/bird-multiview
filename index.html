@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <title>直播多重觀看大廳</title>
+    <style>
+        body { font-family: "Microsoft JhengHei", sans-serif; padding: 20px; background: #f4f7f6; text-align: center;}
+        .grid { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-bottom: 25px;}
+        .card { background: white; padding: 15px 20px; border-radius: 8px; border: 2px solid #ccc; cursor: pointer; width: 220px; font-weight: bold; transition: 0.2s;}
+        .card:hover { border-color: #007bff; }
+        .card.active { border-color: #007bff; background: #e7f1ff; color: #0056b3; }
+        button { padding: 12px 25px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;}
+        button:disabled { background: #aaa; cursor: not-allowed; }
+    </style>
+</head>
+<body>
+    <h2>請選擇想看的直播 (最多 4 個)</h2>
+    <div id="stream-list" class="grid"></div>
+    <button id="go-btn" disabled onclick="openViewSync()">產生多重觀看連結</button>
+
+    <script>
+        const streams = [
+            { id: "w7sYQkiF_MQ", name: "直播 1" },
+            { id: "q_2234WOCkA", name: "直播 2" },
+            { id: "8jG_ZNh-z_k", name: "直播 3" },
+            { id: "JA8OYCJ9_vM", name: "直播 4" } 
+        ];
+
+        const listDiv = document.getElementById('stream-list');
+        const btn = document.getElementById('go-btn');
+        let selected = [];
+
+        streams.forEach(stream => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            card.innerText = stream.name;
+            
+            card.onclick = () => {
+                const idx = selected.indexOf(stream.id);
+                if (idx > -1) {
+                    selected.splice(idx, 1);
+                    card.classList.remove('active');
+                } else {
+                    if (selected.length >= 4) {
+                        alert("最多只能選 4 個喔！");
+                        return;
+                    }
+                    selected.push(stream.id);
+                    card.classList.add('active');
+                }
+                btn.disabled = selected.length === 0;
+            };
+            listDiv.appendChild(card);
+        });
+
+        function openViewSync() {
+            const url = "https://viewsync.net/watch?" + selected.map(id => "v=" + id).join('&');
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
