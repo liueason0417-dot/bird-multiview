@@ -9,18 +9,25 @@
         .card { background: white; padding: 15px 20px; border-radius: 8px; border: 2px solid #ccc; cursor: pointer; width: 220px; font-weight: bold; transition: 0.2s;}
         .card:hover { border-color: #007bff; }
         .card.active { border-color: #007bff; background: #e7f1ff; color: #0056b3; }
+        
+        /* 新增：給「中興鳳頭」專屬的最明顯樣式 */
+        .card.highlight { border: 2px solid #f39c12; background: #fcf3cf; color: #d35400; }
+        .card.highlight:hover { border-color: #d35400; background: #fdebd0; }
+        .card.highlight.active { border-color: #e67e22; background: #fad7a1; color: #a04000; box-shadow: 0 0 10px rgba(230, 126, 34, 0.5); }
+        
         button { padding: 12px 25px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; font-weight: bold;}
         button:disabled { background: #aaa; cursor: not-allowed; }
     </style>
 </head>
 <body>
-    <h2>請選擇想看的直播 (最多 4 個)</h2>
+    <h2>請選擇想看的直播 (最多 5 個)</h2>
     <div id="stream-list" class="grid"></div>
     <button id="go-btn" disabled onclick="openViewSync()">產生多重觀看連結</button>
 
     <script>
-        // 請在這裡把 "替換成你的影片標題" 改成你真正想顯示的字！ (注意前後的雙引號 " 要保留)
         const streams = [
+            // 把中興鳳頭排在第一個，並加上 highlight 標記讓它最醒目
+            { id: "6vEfQgMyt5Q", name: "⭐ 中興鳳頭 ⭐", highlight: true },
             { id: "w7sYQkiF_MQ", name: "大安森林公園鳳頭蒼鷹" },
             { id: "q_2234WOCkA", name: "宜蘭大學鳳頭蒼鷹" },
             { id: "8jG_ZNh-z_k", name: "武陵黃魚鴞" },
@@ -34,6 +41,11 @@
         streams.forEach(stream => {
             const card = document.createElement('div');
             card.className = 'card';
+            
+            // 如果有 highlight 標記，就加上專屬的 CSS 樣式
+            if (stream.highlight) {
+                card.classList.add('highlight');
+            }
             card.innerText = stream.name;
             
             card.onclick = () => {
@@ -42,8 +54,9 @@
                     selected.splice(idx, 1);
                     card.classList.remove('active');
                 } else {
-                    if (selected.length >= 4) {
-                        alert("最多只能選 4 個喔！");
+                    // 這裡的限制已改成 5 個
+                    if (selected.length >= 5) {
+                        alert("最多只能選 5 個喔！");
                         return;
                     }
                     selected.push(stream.id);
